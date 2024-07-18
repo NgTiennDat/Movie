@@ -2,17 +2,20 @@ package com.datien.movie.movie.model;
 
 import com.datien.movie.common.BaseEntity;
 import com.datien.movie.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "_movie")
+@Entity
 public class Movie extends BaseEntity {
 
     private String name;
@@ -25,8 +28,7 @@ public class Movie extends BaseEntity {
     private boolean archived;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "owner_id")
     private User owner;
-
-
 }
