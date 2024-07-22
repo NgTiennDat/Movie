@@ -14,7 +14,7 @@ public class MovieMapper {
         movie.setName(request.name());
         movie.setReleasedYear(request.releasedYear());
         movie.setDirectorName(request.directorName());
-        movie.setIsbn(request.isbn());
+        movie.setGenres(request.genres());
         movie.setSynopsis(request.synopsis());
         movie.setArchived(false);
 
@@ -27,8 +27,9 @@ public class MovieMapper {
                 .name(movie.getName())
                 .releasedYear(movie.getReleasedYear())
                 .directorName(movie.getDirectorName())
-                .isbn(movie.getIsbn())
+                .genres(movie.getGenres())
                 .synopsis(movie.getSynopsis())
+                .rate(movie.getRate())
                 .archived(movie.isArchived())
                 .build();
     }

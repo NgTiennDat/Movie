@@ -67,7 +67,6 @@ public class JwtFilter extends OncePerRequestFilter {
             } else {
                 log.warn("Invalid JWT token for user: {}", userEmail);
             }
-
         } else {
             log.warn("User email is null or already authenticated.");
         }

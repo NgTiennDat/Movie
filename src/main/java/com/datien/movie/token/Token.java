@@ -1,6 +1,6 @@
 package com.datien.movie.token;
 
-import com.datien.movie.user.User;
+import com.datien.movie.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 

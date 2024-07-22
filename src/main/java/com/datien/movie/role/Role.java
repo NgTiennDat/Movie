@@ -1,12 +1,10 @@
 package com.datien.movie.role;
 
-import com.datien.movie.user.User;
+import com.datien.movie.user.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,6 +20,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonBackReference
     private List<User> users;
 //
 //    @CreatedDate

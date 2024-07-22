@@ -1,5 +1,6 @@
-package com.datien.movie.user;
+package com.datien.movie.user.daos;
 
+import com.datien.movie.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

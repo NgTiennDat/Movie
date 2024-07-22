@@ -1,2 +1,4 @@
-package com.datien.movie.playlist;public class Playlist {
+package com.datien.movie.playlist;
+
+public class Playlist {
 }

@@ -1,20 +1,18 @@
-package com.datien.movie.feedback;
+package com.datien.movie.feedback.model;
 
 import com.datien.movie.common.BaseEntity;
 import com.datien.movie.movie.model.Movie;
-import com.datien.movie.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Entity
 public class Feedback extends BaseEntity {
 
@@ -26,10 +24,4 @@ public class Feedback extends BaseEntity {
             name = "movie_id"
     )
     private Movie movie;
-
-    @ManyToOne
-    @JoinColumn(
-            name = "user_id"
-    )
-    private User user;
 }

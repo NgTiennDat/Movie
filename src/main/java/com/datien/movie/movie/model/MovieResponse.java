@@ -13,7 +13,7 @@ public class MovieResponse {
     private String name;
     private int releasedYear;
     private String directorName;
-    private String isbn;
+    private String genres;
     private String synopsis;
     private String owner;
     private byte[] movieCover;

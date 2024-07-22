@@ -15,9 +15,10 @@ public record MovieRequest(
         String directorName,
         @NotNull(message = "104")
         @NotEmpty(message = "104")
-        String isbn,
+        String genres,
         @NotNull(message = "105")
         @NotEmpty(message = "105")
         String synopsis
+
 ) {
 }
