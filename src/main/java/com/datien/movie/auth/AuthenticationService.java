@@ -47,7 +47,14 @@ public class AuthenticationService {
                 .roles(List.of(userRole))
                 .build();
 
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var token = Token.builder()
+                .user(savedUser)
+                .token(jwtToken)
+                .build();
+
+
         sendValidEmail(user);
     }
 
@@ -128,4 +135,5 @@ public class AuthenticationService {
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
     }
+
 }

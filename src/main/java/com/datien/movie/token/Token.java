@@ -18,6 +18,10 @@ public class Token {
     @GeneratedValue
     private Integer id;
     private String token;
+
+//    private boolean expired;
+//    private boolean revoked;
+
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private LocalDateTime validatedAt;

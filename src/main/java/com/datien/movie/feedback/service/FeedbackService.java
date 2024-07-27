@@ -51,9 +51,9 @@ public class FeedbackService {
         return feedback.getId();
     }
 
-    public List<FeedbackResponse> getAllFeedbacksOfMovie(Long movieId) {
+    public List<FeedbackResponse> getAllFeedbacksOfMovie(Long movieId, Authentication connectedUser) {
 
-//        User user = (User) connectedUser.getPrincipal();
+        User user = (User) connectedUser.getPrincipal();
 
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("No movie found with id: " + movieId));
@@ -61,7 +61,7 @@ public class FeedbackService {
         List<Feedback> feedbacks = feedbackRepository.findAllFeedbackByMovieId(movie.getId());
 
         return feedbacks.stream()
-                .map(feedback -> mapper.toFeedbackResponse(feedback, movie.getId()))
+                .map(feedback -> mapper.toFeedbackResponse(feedback, user.getId()))
                 .toList();
     }
 }

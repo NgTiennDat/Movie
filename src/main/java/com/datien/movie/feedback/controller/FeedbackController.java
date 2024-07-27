@@ -29,8 +29,9 @@ public class FeedbackController {
 
     @GetMapping("/feedbacks/{movie-id}")
     public ResponseEntity<List<FeedbackResponse>> getAllFeedbacksOfMovie(
-            @PathVariable("movie-id") Long movieId
+            @PathVariable("movie-id") Long movieId,
+            Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.getAllFeedbacksOfMovie(movieId));
+        return ResponseEntity.ok(feedbackService.getAllFeedbacksOfMovie(movieId, connectedUser));
     }
 }

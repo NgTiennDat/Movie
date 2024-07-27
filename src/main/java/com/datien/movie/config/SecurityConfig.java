@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,23 +20,23 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authProvider;
 
-    private final String[] WHITE_LIST = {
-            "/*/auth/**",
-            "/api/user/password/forgot",
-            "/api/user/password/reset",
-
-            "/v2/api-docs",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui/**",
-            "/webjars/**",
-            "/swagger-ui.html",
-            "/api/demo/**"
-    };
+//    private final String[] WHITE_LIST = {
+//            "/*/auth/**",
+//            "/api/user/password/forgot",
+//            "/api/user/password/reset",
+//
+//            "/v2/api-docs",
+//            "/v3/api-docs",
+//            "/v3/api-docs/**",
+//            "/swagger-resources",
+//            "/swagger-resources/**",
+//            "/configuration/ui",
+//            "/configuration/security",
+//            "/swagger-ui/**",
+//            "/webjars/**",
+//            "/swagger-ui.html",
+//            "/api/demo/**"
+//    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**",
                                 "/api/v1/**",
                                 "/api/v2/**",
-                                "/api/v3/user/**"
+                                "/api/v3/user/**",
+                                "/api/v2/feedbacks/**"
                         )
                         .permitAll()
                         .anyRequest()
