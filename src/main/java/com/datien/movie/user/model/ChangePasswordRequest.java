@@ -1,15 +1,9 @@
 package com.datien.movie.user.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+public record ChangePasswordRequest (
 
-@Getter
-@Setter
-@Builder
-public class ChangePasswordRequest {
-
-    private String currentPassword;
-    private String newPassword;
-    private String confirmPassword;
+     String currentPassword,
+     String newPassword,
+     String confirmPassword
+) {
 }

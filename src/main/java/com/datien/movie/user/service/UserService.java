@@ -34,16 +34,16 @@ public class UserService {
         var user = (User) connectedUser.getPrincipal();
 
         // check if the current password is correct
-        if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+        if(!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Wrong password");
         }
 
         // check if the two new passwords are the same
-        if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+        if(!request.newPassword().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Password are not the same");
         }
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
     }
 }
