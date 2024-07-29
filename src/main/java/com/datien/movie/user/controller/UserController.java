@@ -1,6 +1,6 @@
 package com.datien.movie.user.controller;
 
-import com.datien.movie.user.model.ChangePasswordRequest;
+import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +31,11 @@ public class UserController {
 
     @PatchMapping("/changePassword")
     public ResponseEntity<?> changePassword(
-            @RequestBody ChangePasswordRequest request,
+            @RequestBody UserChangePassword request,
             Authentication connectedUser
     ) {
         userService.changePassword(request, connectedUser);
         return ResponseEntity.ok().build();
     }
+
 }

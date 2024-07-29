@@ -1,16 +1,14 @@
 package com.datien.movie.user.service;
 
-import com.datien.movie.user.model.ChangePasswordRequest;
+import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.daos.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +26,7 @@ public class UserService {
     }
 
     public void changePassword(
-            ChangePasswordRequest request,
+            UserChangePassword request,
             Authentication connectedUser
     ) {
         var user = (User) connectedUser.getPrincipal();
