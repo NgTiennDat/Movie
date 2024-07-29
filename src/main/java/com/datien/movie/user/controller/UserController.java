@@ -29,7 +29,7 @@ public class UserController {
         return userService.findUserById(userId);
     }
 
-    @PatchMapping
+    @PatchMapping("/changePassword")
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request,
             Authentication connectedUser

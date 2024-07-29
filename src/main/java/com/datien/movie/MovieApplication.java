@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.util.List;
+
 @SpringBootApplication
 @EnableAsync
 public class MovieApplication {
@@ -20,10 +22,14 @@ public class MovieApplication {
     @Bean
     public CommandLineRunner runner(RoleRepository roleRepository) {
         return args -> {
-            if(roleRepository.findByName("USER").isEmpty()) {
-                roleRepository.save(Role.builder().name("USER").build());
-            }
+            List<String> roles = List.of("USER", "ADMIN", "MANAGER", "CONTRIBUTOR", "SUBSCRIBER");
+            roles.forEach(role -> {
+                if (roleRepository.findByName(role).isEmpty()) {
+                    roleRepository.save(Role.builder().name(role).build());
+                }
+            });
         };
     }
+
 
 }

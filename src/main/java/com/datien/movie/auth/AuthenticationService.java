@@ -35,8 +35,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("User Role Not Found"));
+        var userRole = roleRepository.findByName(request.getRole())
+                .orElseThrow(() -> new RuntimeException("Role Not Found"));
 
         var user = User.builder()
                 .firstname(request.getFirstname())
@@ -54,7 +54,7 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
 
-
+        tokenRepository.save(token);
         sendValidEmail(user);
     }
 
