@@ -1,8 +1,10 @@
 package com.datien.movie.user.service;
 
+import com.datien.movie.email.EmailService;
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.daos.UserRepository;
+import com.datien.movie.user.model.UserForgotPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +17,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -43,5 +46,12 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
+    }
+
+    public void handleForgotPassword(UserForgotPassword userForgotPassword) {
+        User user = userRepository.findByEmail(userForgotPassword.email())
+                .orElseThrow(() -> new RuntimeException("No user with email: " + userForgotPassword.email()));
+
+
     }
 }

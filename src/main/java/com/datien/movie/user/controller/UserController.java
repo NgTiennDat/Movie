@@ -2,6 +2,7 @@ package com.datien.movie.user.controller;
 
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
+import com.datien.movie.user.model.UserForgotPassword;
 import com.datien.movie.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,14 @@ public class UserController {
             Authentication connectedUser
     ) {
         userService.changePassword(request, connectedUser);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/forgotPassword")
+    public ResponseEntity<?> forgotPassword(
+            @RequestBody UserForgotPassword userForgotPassword
+    ) {
+        userService.handleForgotPassword(userForgotPassword);
         return ResponseEntity.ok().build();
     }
 
