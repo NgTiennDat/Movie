@@ -21,5 +21,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             WHERE feedback.movie.id = :movieId
             AND feedback.id = :feedbackId
            """)
-    Feedback findFeedbackByMovieId(Long feedbackId, Long id);
+    Feedback findFeedbackByMovieId(Long feedbackId, Long movieId);
 }

@@ -50,14 +50,7 @@ public class AuthenticationService {
 
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        var token = Token.builder()
-                .user(savedUser)
-                .token(jwtToken)
-                .expired(false)
-                .revoked(false)
-                .build();
-
-        tokenRepository.save(token);
+        saveUserToken(savedUser, jwtToken);
         emailService.sendValidEmail(user);
     }
 
@@ -79,7 +72,6 @@ public class AuthenticationService {
 
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .notification("You have successfully logged in.")

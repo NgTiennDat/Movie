@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "_user")
 public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue
