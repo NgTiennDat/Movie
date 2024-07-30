@@ -36,7 +36,7 @@ public class FeedbackController {
     }
 
     @PatchMapping("/feedbacks/{feedback-id}")
-    public ResponseEntity<Void> updateFeedback(
+    public ResponseEntity<FeedbackResponse> updateFeedback(
             @PathVariable("feedback-id") Long feedbackId,
             @RequestParam Long movieId,
             @RequestBody @Valid FeedbackRequest request,

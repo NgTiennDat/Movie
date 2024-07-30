@@ -14,4 +14,12 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             WHERE feedback.movie.id = :movieId
             """)
     List<Feedback> findAllFeedbackByMovieId(Long movieId);
+
+    @Query("""
+            SELECT feedback
+            FROM Feedback feedback
+            WHERE feedback.movie.id = :movieId
+            AND feedback.id = :feedbackId
+           """)
+    Feedback findFeedbackByMovieId(Long feedbackId, Long id);
 }

@@ -8,6 +8,7 @@ import com.datien.movie.movie.daos.MovieRepository;
 import com.datien.movie.movie.model.Movie;
 import com.datien.movie.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -65,14 +66,32 @@ public class FeedbackService {
                 .toList();
     }
 
-    public void updateFeedback(
+    public FeedbackResponse updateFeedback(
             Long feedbackId,
             Long movieId,
             FeedbackRequest request,
             Authentication connectedUser
     ) {
 
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("No movie found with id: " + movieId));
 
+        User user = (User) connectedUser.getPrincipal();
 
+        Feedback feedback = feedbackRepository.findFeedbackByMovieId(feedbackId, movie.getId());
+
+        if(feedback == null) {
+            throw new OptimisticLockingFailureException("Could not find feedback with id: " + feedbackId);
+        }
+
+        var newFeedback = Feedback.builder()
+                .note(request.note())
+                .comment(request.comment())
+                .createdDate(LocalDateTime.now())
+                .createdBy(user.getId())
+                .movie(movie)
+                .build();
+        feedbackRepository.save(newFeedback);
+        return mapper.toFeedbackResponse(newFeedback, user.getId());
     }
 }

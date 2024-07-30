@@ -48,7 +48,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovieWatch(movieId, connectedUser));
     }
 
-    @PutMapping("/movies/{movie-id}")
+    @PatchMapping("/movies/{movie-id}")
     public ResponseEntity<MovieResponse> updateMovie(
             @PathVariable("movie-id") Long movieId,
             @RequestBody @Valid MovieRequest request,
