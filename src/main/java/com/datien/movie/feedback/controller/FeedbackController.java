@@ -34,4 +34,17 @@ public class FeedbackController {
     ) {
         return ResponseEntity.ok(feedbackService.getAllFeedbacksOfMovie(movieId, connectedUser));
     }
+
+    @PatchMapping("/feedbacks/{feedback-id}")
+    public ResponseEntity<Void> updateFeedback(
+            @PathVariable("feedback-id") Long feedbackId,
+            @RequestParam Long movieId,
+            @RequestBody @Valid FeedbackRequest request,
+            Authentication connectedUser
+    ) {
+        feedbackService.updateFeedback(feedbackId, movieId, request, connectedUser);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

@@ -64,4 +64,15 @@ public class FeedbackService {
                 .map(feedback -> mapper.toFeedbackResponse(feedback, user.getId()))
                 .toList();
     }
+
+    public void updateFeedback(
+            Long feedbackId,
+            Long movieId,
+            FeedbackRequest request,
+            Authentication connectedUser
+    ) {
+
+
+
+    }
 }

@@ -19,8 +19,8 @@ public class Token {
     private Integer id;
     private String token;
 
-//    private boolean expired;
-//    private boolean revoked;
+    private boolean expired;
+    private boolean revoked;
 
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;

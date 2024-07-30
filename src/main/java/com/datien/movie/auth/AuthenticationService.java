@@ -53,13 +53,13 @@ public class AuthenticationService {
         var token = Token.builder()
                 .user(savedUser)
                 .token(jwtToken)
+                .expired(false)
+                .revoked(false)
                 .build();
 
         tokenRepository.save(token);
         emailService.sendValidEmail(user);
     }
-
-
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
