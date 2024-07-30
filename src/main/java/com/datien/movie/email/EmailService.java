@@ -1,5 +1,10 @@
 package com.datien.movie.email;
 
+import com.datien.movie.token.Token;
+import com.datien.movie.token.TokenRepository;
+import com.datien.movie.user.model.User;
+import com.datien.movie.user.otp.Otp;
+import com.datien.movie.user.otp.OtpRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +15,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +28,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final TokenRepository tokenRepository;
+    private final OtpRepository otpRepository;
 
     @Async
     public void sendEmail(
@@ -49,5 +58,44 @@ public class EmailService {
 
         mailSender.send(message);
         System.out.println("mail sent successfully...");
+    }
+
+    @Async
+    public void sendValidEmail(User user) throws MessagingException {
+        String activeCode = generateAndSavedActiveToken(user);
+
+        this.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                "Account activation",
+                activeCode
+        );
+
+        System.out.println(activeCode);
+    }
+
+    private String generateAndSavedActiveToken(User user) {
+        String activeCode = generateActiveCode(6);
+
+        var otp = Otp.builder()
+                .code(activeCode)
+                .createdAt(LocalDateTime.now())
+                .expiredAt(LocalDateTime.now().plusMinutes(5))
+                .user(user)
+                .build();
+        otpRepository.save(otp);
+        return activeCode;
+    }
+
+    private String generateActiveCode(int length) {
+        String characters = "0123456789";
+        StringBuilder codeBuilder = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+
+        for(int i = 0; i < length; i++) {
+            int randomInt = random.nextInt(characters.length());
+            codeBuilder.append(characters.charAt(randomInt));
+        }
+        return codeBuilder.toString();
     }
 }

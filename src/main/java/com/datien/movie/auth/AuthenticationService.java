@@ -7,6 +7,7 @@ import com.datien.movie.email.EmailService;
 import com.datien.movie.role.RoleRepository;
 import com.datien.movie.token.Token;
 import com.datien.movie.token.TokenRepository;
+import com.datien.movie.user.otp.OtpRepository;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.daos.UserRepository;
 import com.datien.movie.util.JwtService;
@@ -17,7 +18,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +33,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
+    private final OtpRepository otpRepository;
 
     public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName(request.getRole())
@@ -55,46 +56,10 @@ public class AuthenticationService {
                 .build();
 
         tokenRepository.save(token);
-        sendValidEmail(user);
+        emailService.sendValidEmail(user);
     }
 
-    public void sendValidEmail(User user) throws MessagingException {
-        String activeToken = generateAndSavedActiveToken(user);
 
-        emailService.sendEmail(
-                user.getEmail(),
-                user.getUsername(),
-                "Account activation",
-                activeToken
-        );
-
-        System.out.println(activeToken);
-    }
-
-    private String generateAndSavedActiveToken(User user) {
-        String activeCode = generateActiveCode(6);
-
-        var token = Token.builder()
-                .token(activeCode)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(5))
-                .user(user)
-                .build();
-        tokenRepository.save(token);
-        return activeCode;
-    }
-
-    private String generateActiveCode(int length) {
-        String characters = "0123456789";
-        StringBuilder codeBuilder = new StringBuilder();
-        SecureRandom random = new SecureRandom();
-
-        for(int i = 0; i < length; i++) {
-            int randomInt = random.nextInt(characters.length());
-            codeBuilder.append(characters.charAt(randomInt));
-        }
-        return codeBuilder.toString();
-    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
@@ -118,22 +83,22 @@ public class AuthenticationService {
                 .build();
     }
 
-    public void activateAccount(String token) throws MessagingException {
-        var savedToken = tokenRepository.findByToken(token)
+    public void activateAccount(String code) throws MessagingException {
+        var savedCode = otpRepository.findByCode(code)
                 .orElseThrow(() -> new RuntimeException("No token found."));
 
-        if(savedToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            sendValidEmail(savedToken.getUser());
+        if(savedCode.getExpiredAt().isBefore(LocalDateTime.now())) {
+            emailService.sendValidEmail(savedCode.getUser());
             throw new RuntimeException("Expired or invalid token");
         }
 
-        var user = userRepository.findById(savedToken.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("No user id found with id: " + savedToken.getUser().getId()));
+        var user = userRepository.findById(savedCode.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("No user id found with id: " + savedCode.getUser().getId()));
 
         user.setEnabled(true);
         userRepository.save(user);
-        savedToken.setValidatedAt(LocalDateTime.now());
-        tokenRepository.save(savedToken);
+        savedCode.setValidatedAt(LocalDateTime.now());
+        otpRepository.save(savedCode);
     }
 
 }

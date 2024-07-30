@@ -4,6 +4,7 @@ import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.model.UserForgotPassword;
 import com.datien.movie.user.service.UserService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,7 +43,7 @@ public class UserController {
     @GetMapping("/forgotPassword")
     public ResponseEntity<?> forgotPassword(
             @RequestBody UserForgotPassword userForgotPassword
-    ) {
+    ) throws MessagingException {
         userService.handleForgotPassword(userForgotPassword);
         return ResponseEntity.ok().build();
     }

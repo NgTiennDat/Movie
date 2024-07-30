@@ -1,10 +1,14 @@
 package com.datien.movie.user.service;
 
 import com.datien.movie.email.EmailService;
+import com.datien.movie.token.TokenRepository;
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.daos.UserRepository;
 import com.datien.movie.user.model.UserForgotPassword;
+import com.datien.movie.user.model.UserResetPassword;
+import com.datien.movie.user.otp.OtpRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final TokenRepository tokenRepository;
+    private final OtpRepository otpRepository;
 
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -48,10 +54,18 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void handleForgotPassword(UserForgotPassword userForgotPassword) {
+    public void handleForgotPassword(UserForgotPassword userForgotPassword) throws MessagingException {
         User user = userRepository.findByEmail(userForgotPassword.email())
                 .orElseThrow(() -> new RuntimeException("No user with email: " + userForgotPassword.email()));
 
+        emailService.sendValidEmail(user);
+    }
+
+    public void handleResetPassword(UserResetPassword userResetPassword) throws MessagingException {
+        User user = userRepository.findByEmail(userResetPassword.email())
+                .orElseThrow(() -> new RuntimeException("No user with email: " + userResetPassword.email()));
+
+        var activeCode = otpRepository.findByUserId(user.getId());
 
     }
 }
