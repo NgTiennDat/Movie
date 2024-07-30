@@ -77,6 +77,9 @@ public class AuthenticationService {
 
         String jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
 
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .notification("You have successfully logged in.")
@@ -99,6 +102,30 @@ public class AuthenticationService {
         userRepository.save(user);
         savedCode.setValidatedAt(LocalDateTime.now());
         otpRepository.save(savedCode);
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .expired(false)
+                .revoked(false)
+                .createdAt(LocalDateTime.now())
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserToken = tokenRepository.findAllValidTokenByUser(user.getId());
+
+        if(validUserToken.isEmpty()) {
+            return;
+        }
+        validUserToken.forEach(token -> {
+            token.setRevoked(true);
+            token.setExpired(true);
+        });
+        tokenRepository.saveAll(validUserToken);
     }
 
 }

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "_user")
+@Entity
 public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue
