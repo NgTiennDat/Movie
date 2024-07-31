@@ -1,6 +1,6 @@
 package com.datien.movie.config;
 
-import com.datien.movie.user.daos.UserRepository;
+import com.datien.movie.user.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

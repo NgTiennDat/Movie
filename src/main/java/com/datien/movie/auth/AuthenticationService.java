@@ -9,7 +9,7 @@ import com.datien.movie.token.Token;
 import com.datien.movie.token.TokenRepository;
 import com.datien.movie.user.otp.OtpRepository;
 import com.datien.movie.user.model.User;
-import com.datien.movie.user.daos.UserRepository;
+import com.datien.movie.user.repo.UserRepository;
 import com.datien.movie.util.JwtService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;

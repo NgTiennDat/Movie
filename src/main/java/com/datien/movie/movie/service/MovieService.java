@@ -2,7 +2,7 @@ package com.datien.movie.movie.service;
 
 import com.datien.movie.common.PageResponse;
 import com.datien.movie.exception.OperationNotPermittedException;
-import com.datien.movie.movie.daos.MovieRepository;
+import com.datien.movie.movie.repo.MovieRepository;
 import com.datien.movie.movie.model.Movie;
 import com.datien.movie.movie.model.MovieRequest;
 import com.datien.movie.movie.model.MovieResponse;

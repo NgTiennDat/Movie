@@ -1,10 +1,10 @@
 package com.datien.movie.feedback.service;
 
-import com.datien.movie.feedback.daos.FeedbackRepository;
+import com.datien.movie.feedback.repo.FeedbackRepository;
 import com.datien.movie.feedback.model.Feedback;
 import com.datien.movie.feedback.model.FeedbackRequest;
 import com.datien.movie.feedback.model.FeedbackResponse;
-import com.datien.movie.movie.daos.MovieRepository;
+import com.datien.movie.movie.repo.MovieRepository;
 import com.datien.movie.movie.model.Movie;
 import com.datien.movie.user.model.User;
 import lombok.RequiredArgsConstructor;

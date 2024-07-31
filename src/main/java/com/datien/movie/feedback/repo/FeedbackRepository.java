@@ -1,4 +1,4 @@
-package com.datien.movie.feedback.daos;
+package com.datien.movie.feedback.repo;
 
 import com.datien.movie.feedback.model.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;

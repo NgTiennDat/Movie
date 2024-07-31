@@ -1,4 +1,4 @@
-package com.datien.movie.movie.daos;
+package com.datien.movie.movie.repo;
 
 import com.datien.movie.movie.model.Movie;
 import org.springframework.data.domain.Page;

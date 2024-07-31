@@ -4,7 +4,7 @@ import com.datien.movie.email.EmailService;
 import com.datien.movie.token.TokenRepository;
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
-import com.datien.movie.user.daos.UserRepository;
+import com.datien.movie.user.repo.UserRepository;
 import com.datien.movie.user.model.UserForgotPassword;
 import com.datien.movie.user.model.UserResetPassword;
 import com.datien.movie.user.otp.OtpRepository;
