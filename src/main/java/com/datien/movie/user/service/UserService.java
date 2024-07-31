@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -57,7 +58,6 @@ public class UserService {
     public void handleForgotPassword(UserForgotPassword userForgotPassword) throws MessagingException {
         User user = userRepository.findByEmail(userForgotPassword.email())
                 .orElseThrow(() -> new RuntimeException("No user with email: " + userForgotPassword.email()));
-
         emailService.sendValidEmail(user);
     }
 
@@ -65,7 +65,12 @@ public class UserService {
         User user = userRepository.findByEmail(userResetPassword.email())
                 .orElseThrow(() -> new RuntimeException("No user with email: " + userResetPassword.email()));
 
-        var activeCode = otpRepository.findByUserId(user.getId());
+        var activeCode = otpRepository.findByUserId(user.getId())
+                .filter(otp -> otp.getExpiredAt().isAfter(LocalDateTime.now()))
+                .filter(otp -> otp.getCode().equals(userResetPassword.activateCode()))
+                .orElseThrow(() -> new RuntimeException("No user with active code: " + userResetPassword.activateCode()));
 
+        userRepository.save(user);
+        otpRepository.delete(activeCode);
     }
 }

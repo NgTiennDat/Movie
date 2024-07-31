@@ -3,8 +3,10 @@ package com.datien.movie.user.controller;
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.model.UserForgotPassword;
+import com.datien.movie.user.model.UserResetPassword;
 import com.datien.movie.user.service.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,7 +33,7 @@ public class UserController {
         return userService.findUserById(userId);
     }
 
-    @PatchMapping("/changePassword")
+    @PatchMapping("/password/change")
     public ResponseEntity<?> changePassword(
             @RequestBody UserChangePassword request,
             Authentication connectedUser
@@ -40,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/forgotPassword")
+    @PostMapping("/password/forgot")
     public ResponseEntity<?> forgotPassword(
             @RequestBody UserForgotPassword userForgotPassword
     ) throws MessagingException {
@@ -48,4 +50,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/password/reset")
+    public ResponseEntity<?> resetPassword(
+        @Valid @RequestBody UserResetPassword userResetPassword
+    ) throws MessagingException {
+        userService.handleResetPassword(userResetPassword);
+        return ResponseEntity.ok().build();
+    }
 }
