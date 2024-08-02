@@ -1,6 +1,7 @@
 package com.datien.movie.user.service;
 
 import com.datien.movie.email.EmailService;
+import com.datien.movie.token.Token;
 import com.datien.movie.token.TokenRepository;
 import com.datien.movie.user.model.UserChangePassword;
 import com.datien.movie.user.model.User;
@@ -8,6 +9,7 @@ import com.datien.movie.user.repo.UserRepository;
 import com.datien.movie.user.model.UserForgotPassword;
 import com.datien.movie.user.model.UserResetPassword;
 import com.datien.movie.user.otp.OtpRepository;
+import com.datien.movie.util.JwtService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -25,6 +28,8 @@ public class UserService {
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
     private final OtpRepository otpRepository;
+    private final UserTokenService userTokenService;
+    private final JwtService jwtService;
 
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -58,6 +63,14 @@ public class UserService {
     public void handleForgotPassword(UserForgotPassword userForgotPassword) throws MessagingException {
         User user = userRepository.findByEmail(userForgotPassword.email())
                 .orElseThrow(() -> new RuntimeException("No user with email: " + userForgotPassword.email()));
+
+        var oldActivateCode = otpRepository.findByUserId(user.getId());
+
+        if(oldActivateCode.isEmpty()) {
+            throw new IllegalArgumentException("No user with id: " + user.getId());
+        }
+        otpRepository.delete(oldActivateCode.get());
+        user.setEnabled(false);
         emailService.sendValidEmail(user);
     }
 
@@ -66,11 +79,15 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("No user with email: " + userResetPassword.email()));
 
         var activeCode = otpRepository.findByUserId(user.getId())
-                .filter(otp -> otp.getExpiredAt().isAfter(LocalDateTime.now()))
-                .filter(otp -> otp.getCode().equals(userResetPassword.activateCode()))
-                .orElseThrow(() -> new RuntimeException("No user with active code: " + userResetPassword.activateCode()));
+                .orElseThrow(() -> new RuntimeException("No activate code found."));
 
+        if(activeCode.getExpiredAt().isBefore(LocalDateTime.now())) {
+            emailService.sendValidEmail(user);
+            throw new IllegalArgumentException("No user with id: " + user.getId());
+        }
+
+        user.setPassword(passwordEncoder.encode(userResetPassword.newPassword()));
         userRepository.save(user);
-        otpRepository.delete(activeCode);
+        otpRepository.save(activeCode);
     }
 }

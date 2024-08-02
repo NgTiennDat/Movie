@@ -54,7 +54,7 @@ public class EmailService {
         helper.setFrom("ntdat14092003@gmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText("mail to activate the registered account. The active code is " + activationCode);
+        helper.setText("mail to activate the account. The active code is " + activationCode);
 
         mailSender.send(message);
         System.out.println("mail sent successfully...");

@@ -10,6 +10,7 @@ import com.datien.movie.token.TokenRepository;
 import com.datien.movie.user.otp.OtpRepository;
 import com.datien.movie.user.model.User;
 import com.datien.movie.user.repo.UserRepository;
+import com.datien.movie.user.service.UserTokenService;
 import com.datien.movie.util.JwtService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final EmailService emailService;
-    private final TokenRepository tokenRepository;
+    private final UserTokenService userTokenService;
     private final OtpRepository otpRepository;
 
     public void register(RegistrationRequest request) throws MessagingException {
@@ -50,7 +51,7 @@ public class AuthenticationService {
 
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        saveUserToken(savedUser, jwtToken);
+        userTokenService.saveUserToken(savedUser, jwtToken);
         emailService.sendValidEmail(user);
     }
 
@@ -70,8 +71,8 @@ public class AuthenticationService {
 
         String jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
 
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+        userTokenService.revokeAllUserTokens(user);
+        userTokenService.saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .notification("You have successfully logged in.")
@@ -94,30 +95,6 @@ public class AuthenticationService {
         userRepository.save(user);
         savedCode.setValidatedAt(LocalDateTime.now());
         otpRepository.save(savedCode);
-    }
-
-    private void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .expired(false)
-                .revoked(false)
-                .createdAt(LocalDateTime.now())
-                .build();
-        tokenRepository.save(token);
-    }
-
-    private void revokeAllUserTokens(User user) {
-        var validUserToken = tokenRepository.findAllValidTokenByUser(user.getId());
-
-        if(validUserToken.isEmpty()) {
-            return;
-        }
-        validUserToken.forEach(token -> {
-            token.setRevoked(true);
-            token.setExpired(true);
-        });
-        tokenRepository.saveAll(validUserToken);
     }
 
 }
