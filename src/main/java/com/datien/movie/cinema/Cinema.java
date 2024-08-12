@@ -1,4 +1,4 @@
-//package com.datien.movie.ticket;
+//package com.datien.movie.cinema;
 //
 //import com.datien.movie.common.BaseEntity;
 //import lombok.*;
@@ -8,7 +8,9 @@
 //@Builder
 //@AllArgsConstructor
 //@NoArgsConstructor
-//public class Ticket extends BaseEntity {
-//    private String title;
+//public class Cinema extends BaseEntity {
+//    private String cinemaName;
+//
+//    private
 //
 //}
